@@ -4,8 +4,8 @@ import * as mapboxgl from 'mapbox-gl';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { data } from '../assests/data';
-import { _ } from '../models/geoLocationResponse'
-import { map } from "rxjs/operators";
+import { location } from '../models/location.model'
+import {location_data} from '../assests/location-data';
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +17,12 @@ export class MapService {
   lat: number = 39.8097343;
   lng: number = -98.5556199;
   zoom: number = 4;
+  index = 0;
+  locations: location[] = []
 
   constructor(private http: HttpClient) { }
 
-  buildMap() {
+  buildMap() : void {
     this.map = new mapboxgl.Map({
       accessToken: environment.mapbox.accessToken,
       style: this.style,
@@ -33,25 +35,32 @@ export class MapService {
     this.map.addControl(new mapboxgl.FullscreenControl());
   }
 
-  addPoints() {
-    this.getGeoLocations()
-    .forEach(o => o.pipe(map((response: any) => response.items[0].position))
-    .subscribe(r => {
+  addPoints() : void {
+    // this.getGeoLocations()
+    // .forEach(o => o.pipe(map((response: any) => response.items[0].position))
+    // .subscribe(r => {
+    //   this.locations[this.index].lng = r.lng
+    //   this.locations[this.index].lat = r.lat
+    //   this.index++;
+    //   new mapboxgl.Marker()
+    //     .setLngLat([r.lng, r.lat])
+    //     .addTo(this.map);
+    // }))
+    location_data.forEach(o => {
       new mapboxgl.Marker()
-        .setLngLat([r.lng, r.lat])
+        .setLngLat([o.lng, o.lat])
         .addTo(this.map);
-    }))
+    })
+
+    console.log(this.locations)
   }
 
   getGeoLocations() : Observable<Object>[] {
     let geoLocationResponses: Observable<Object>[] = [];
     data.forEach(d => {
-      geoLocationResponses.push(this.http.get('https://geocode.search.hereapi.com/v1/geocode?apikey=NaLn9yp29BagdpPhJmvPQ0RUPOtZ8Z39cYK8nTvJAU8&q=' + d))
+      this.locations.push(new location(d, 0 , 0))
+      geoLocationResponses.push(this.http.get('https://geocode.search.hereapi.com/v1/geocode?apikey=fkgER3FFSQ500KkwLxR0_gk5Id8SU3XMf2nEUDchnd8&q=' + d))
     })
     return geoLocationResponses;
   }
 }
-
-
-
-
