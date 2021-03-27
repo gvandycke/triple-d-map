@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
-import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { data } from '../assests/data';
 import { location } from '../models/location.model'
 import {location_data} from '../assests/location-data';
 
@@ -44,5 +42,5 @@ export class MapService {
 
     console.log(this.locations)
   }
-  
+
 }
