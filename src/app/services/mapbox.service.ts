@@ -36,16 +36,6 @@ export class MapService {
   }
 
   addPoints() : void {
-    // this.getGeoLocations()
-    // .forEach(o => o.pipe(map((response: any) => response.items[0].position))
-    // .subscribe(r => {
-    //   this.locations[this.index].lng = r.lng
-    //   this.locations[this.index].lat = r.lat
-    //   this.index++;
-    //   new mapboxgl.Marker()
-    //     .setLngLat([r.lng, r.lat])
-    //     .addTo(this.map);
-    // }))
     location_data.forEach(o => {
       new mapboxgl.Marker()
         .setLngLat([o.lng, o.lat])
@@ -54,13 +44,5 @@ export class MapService {
 
     console.log(this.locations)
   }
-
-  getGeoLocations() : Observable<Object>[] {
-    let geoLocationResponses: Observable<Object>[] = [];
-    data.forEach(d => {
-      this.locations.push(new location(d, 0 , 0))
-      geoLocationResponses.push(this.http.get('https://geocode.search.hereapi.com/v1/geocode?apikey=fkgER3FFSQ500KkwLxR0_gk5Id8SU3XMf2nEUDchnd8&q=' + d))
-    })
-    return geoLocationResponses;
-  }
+  
 }
